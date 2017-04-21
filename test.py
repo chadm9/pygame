@@ -56,9 +56,15 @@ monster = {
 monster2 = {
         "x": randint(0, 480),
         "y": randint(0, 450),
-        "speed": 3
+        "speed": 5
 }
 
+
+monster3 = {
+        "x": randint(0, 480),
+        "y": randint(0, 450),
+        "speed": 7
+}
 
 screen_size = (screen["height"], screen["width"])
 pygame_screen = pygame.display.set_mode(screen_size)
@@ -68,6 +74,8 @@ hero_image = pygame.image.load('./images/hero.png')
 goblin_image = pygame.image.load('./images/goblin.png')
 monster_image = pygame.image.load('./images/monster.png')
 monster2_image = pygame.image.load('./images/monster.png')
+monster3_image = pygame.image.load('./images/monster.png')
+
 
 pygame.mixer.music.load('sounds/music.wav')
 pygame.mixer.music.play(-1)
@@ -162,6 +170,18 @@ while game_on:
             monster2['x'] = rand_x
             monster2['y'] = rand_y
             hero['lives'] -= 1
+
+
+        distance_betweenm3 = fabs (hero['x'] - monster3['x']) + fabs(hero['y'] - monster3['y'])
+
+        if distance_betweenm3 < 32 and hero['kills'] >= 6:
+            rand_x = randint(0, 480)
+            rand_y = randint(0, 450)
+
+            monster3['x'] = rand_x
+            monster3['y'] = rand_y
+            hero['lives'] -= 1
+
 	#if hero['lives'] == 0:
 	    #exit() 
 	# ---RENDER!---
@@ -197,6 +217,19 @@ while game_on:
                 monster2['y'] -= monster2['speed']
 
 
+        if hero['lives'] > 0:
+            if hero['x'] > monster3['x']:
+                monster3['x'] += monster3['speed']
+
+            if hero['x'] < monster3['x']:
+                monster3['x'] -= monster3['speed']
+
+            if hero['y'] > monster3['y']:
+                monster3['y'] += monster3['speed']
+
+            if hero['y'] < monster3['y']:
+                monster3['y'] -= monster3['speed']
+
 #	if hero['lives'] > 0:
             if hero['x'] > goblin['x']:
                 goblin['x'] -= goblin['speed']
@@ -215,15 +248,16 @@ while game_on:
 	    hero['kills'] = 0 
 	    hero['speed'] = 5
 	    goblin['speed'] = 1
-            monster['speed'] = 1
 	    monster['x'] = randint(0, 480)  
             monster['y'] = randint(0, 450)
             goblin['x'] = randint(0, 480)
             goblin['y'] = randint(0, 450)
-            monster2['speed'] = 3
             monster2['x'] = randint(0, 480)
             monster2['y'] = randint(0, 450)	    
-        
+            monster3['x'] = randint(0, 480)
+            monster3['y'] = randint(0, 450)        
+
+
         if goblin['y'] >= 450:
 	    goblin['y'] = 0 
 
@@ -263,6 +297,10 @@ while game_on:
 
 	if hero['kills'] >= 3:
             pygame_screen.blit(monster2_image, [monster2['x'], monster2['y']])
+
+        if hero['kills'] >= 6:
+            pygame_screen.blit(monster3_image, [monster3['x'], monster3['y']])
+
 
 	# clear the screen for next time
 	pygame.display.flip()
