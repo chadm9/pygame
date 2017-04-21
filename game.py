@@ -19,7 +19,8 @@ keys = {
 	"right": 275,
 	"left": 276,
 	"up": 273,
-	"down": 274
+	"down": 274,
+	"enter": 13
 }
 
 keys_down = {
@@ -27,26 +28,27 @@ keys_down = {
 	"left": False,
 	"up": False,
 	"down": False,
+	"enter":False
 }
 
 hero = {
 	"x": 100,
 	"y": 100,
-	"speed": 10,
-	"wins": 0,
+	"speed": 5,
+	"kills": 0,
         "lives": 3
 }
   
 
 goblin = {
-        "x": 200,
-        "y": 200,
+        "x": randint(0, 480),
+        "y": randint(0, 450),
         "speed": 1
 }
 
 monster = {
-        "x": 300,
-        "y": 300,
+        "x": randint(0, 480),
+        "y": randint(0, 450),
         "speed": 1
 }
 
@@ -88,6 +90,13 @@ while game_on:
 			elif event.key == keys['right']:
 				# print "User pressed right!"
 				keys_down['right'] = True
+                        elif event.key == keys['enter'] :
+                                keys_down['enter'] = True
+ 
+			#else:
+			#	print event.key
+
+
 		elif event.type == pygame.KEYUP:
 			# print "The user let go of a key"
 			if event.key == keys['up']:
@@ -99,6 +108,8 @@ while game_on:
 				keys_down['left'] = False
 			if event.key == keys['right']:
 				keys_down['right'] = False
+                        if event.key == keys['enter']:
+                                keys_down['enter'] = False
 
 	# Update Hero position
 	if hero['lives'] > 0:
@@ -118,9 +129,10 @@ while game_on:
 
 	    goblin['x'] = rand_x
             goblin['y'] = rand_y
-	    hero['wins'] += 1 
+	    hero['kills'] += 1 
             goblin['speed'] +=1
             monster['speed'] +=1
+            hero['speed'] += 1
 
         distance_between = fabs (hero['x'] - monster['x']) + fabs(hero['y'] - monster['y'])
         if distance_between < 32:
@@ -150,7 +162,7 @@ while game_on:
             if hero['y'] < monster['y']:
                 monster['y'] -= monster['speed']
 
-	if hero['lives'] > 0:
+#	if hero['lives'] > 0:
             if hero['x'] > goblin['x']:
                 goblin['x'] -= goblin['speed']
 
@@ -162,6 +174,17 @@ while game_on:
 
             if hero['y'] < goblin['y']:
                 goblin['y'] += goblin['speed']
+	    
+	if hero['lives'] == 0 and keys_down['enter']:
+            hero['lives'] = 3
+	    hero['kills'] = 0 
+	    hero['speed'] = 5
+	    goblin['speed'] = 1
+            monster['speed'] = 1
+	    monster['x'] = randint(0, 480)  
+            monster['y'] = randint(0, 450)
+            goblin['x'] = randint(0, 480)
+            goblin['y'] = randint(0, 450)
         
         if goblin['y'] >= 450:
 	    goblin['y'] = 0 
@@ -179,14 +202,20 @@ while game_on:
 	pygame_screen.blit(background_image, [0,0])
 
 	font = pygame.font.Font(None, 25)
-	wins_text = font.render("Wins: %d   Lives: %d " % (hero['wins'], hero['lives']), True, (0,0,0))
+	wins_text = font.render("Kills: %d   Lives: %d " % (hero['kills'], hero['lives']), True, (0,0,0))
 	pygame_screen.blit(wins_text, [40,40])
 	# draw the hero
 
 	end_font = pygame.font.Font(None, 55)
-	game_over = end_font.render('You Suk!  (git gud)', True, (0,0,0))
+	game_over = end_font.render('You Suk!', True, (0,0,0))
+	
+	restart_game = pygame.font.Font(None, 30)
+	retry = restart_game.render('([Enter] to git gud)', True, (0,0,0))
+
+
 	if hero['lives']==0:
-	    pygame_screen.blit(game_over, [90,130])
+	    pygame_screen.blit(game_over, [170, 150])
+	    pygame_screen.blit(retry, [160, 200])
 
 	pygame_screen.blit(hero_image, [hero['x'],hero['y']])
 
