@@ -80,13 +80,14 @@ monster3_image = pygame.image.load('./images/monster.png')
 pygame.mixer.music.load('sounds/music.wav')
 pygame.mixer.music.play(-1)
 
-
+tick = 0
 # /////////////////////////////////////////////
 # //////////////MAIN GAME LOOP/////////////////
 # /////////////////////////////////////////////	x
 game_on = True
 # Create the game loop (while 1)
 while game_on:
+        tick += 1
 	# we are inside teh main game loop. It will run as long as game_on is true
 	# ---EVENTS!!----
 	for event in pygame.event.get():
